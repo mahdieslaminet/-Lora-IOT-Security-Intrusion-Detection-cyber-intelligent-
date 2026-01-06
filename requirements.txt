@@ -1,0 +1,17 @@
+scikit-learn>=1.2
+pandas>=1.5
+numpy>=1.23
+datasets>=2.14
+imbalanced-learn>=0.11
+matplotlib>=3.7
+seaborn>=0.12
+jupyter>=1.0
+pyyaml>=6.0
+joblib>=1.2
+fastapi>=0.103
+uvicorn>=0.23
+python-multipart>=0.0.6
+pydantic>=2.4
+aiofiles>=23.1
+pyarrow>=12.0
+google-genai>=0.5

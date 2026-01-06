@@ -1,0 +1,568 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Length 2732 >>
+stream
+BT
+/F1 10 Tf
+72 710 Td
+(PROJECT DOCUMENTATION - IOT TRAFFIC ANOMALY DETECTION) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(This document describes the full architecture, methodology, and implementation details for the) Tj
+0 -12 Td
+(project in this repository. It is a faithful reproduction of the pipeline in "IoT Dataset Validation) Tj
+0 -12 Td
+(Using Machine Learning Techniques for Traffic Anomaly Detection" \(Vigoya et al., Electronics 2021,) Tj
+0 -12 Td
+(DOI:10.3390/electronics10222857\) and extends it with a production-style web UI and optional Gemini) Tj
+0 -12 Td
+(assistant.) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(1\) OBJECTIVE) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(* Reproduce the paper's methodology end-to-end using proxy datasets from Hugging Face.) Tj
+0 -12 Td
+(* Provide a clean ML package with modular preprocessing and model pipelines.) Tj
+0 -12 Td
+(* Offer a web dashboard for dataset upload, model configuration, training, and evaluation.) Tj
+0 -12 Td
+(* Add blue-team analysis: CVE similarity, defensive controls, and response playbooks.) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(2\) REPOSITORY STRUCTURE) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(* iot_anomaly_detection/) Tj
+0 -12 Td
+(  - data/: dataset loading, feature mapping, preprocessing) Tj
+0 -12 Td
+(  - models/: model adapters, registry, nested CV trainer) Tj
+0 -12 Td
+(  - utils/: constants, metrics, CV utilities) Tj
+0 -12 Td
+(* iot-anomaly-ui/) Tj
+0 -12 Td
+(  - backend/: FastAPI services) Tj
+0 -12 Td
+(  - frontend/: React + MUI dashboard) Tj
+0 -12 Td
+(* notebooks/: end-to-end reproduction notebook + generated charts) Tj
+0 -12 Td
+(* config/: params.yaml for preprocessing and hyperparameter configuration) Tj
+0 -12 Td
+(* docs/: project documentation and tutorial pages) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(3\) PAPER METHODOLOGY MAPPING) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(The implementation mirrors the paper's main steps.) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(3.1 PREPROCESSING) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(* Cyclical time encoding for frame.time \(sin/cos of time-of-day\).) Tj
+0 -12 Td
+(* Numeric binning for frame.len and port fields.) Tj
+0 -12 Td
+(* One-hot encoding for categorical features.) Tj
+0 -12 Td
+(* Flow-based aggregation: flow.packets, flow.bytes, flow.duration, flow.rate.) Tj
+0 -12 Td
+(* Text-derived features when categorical columns are highly cardinal \(length, token count\).) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Core attributes \(14 features\) used as the canonical mapping:) Tj
+0 -12 Td
+(* ip.src, ip.dst) Tj
+0 -12 Td
+(* tcp.srcport, tcp.dstport) Tj
+0 -12 Td
+(* udp.srcport, udp.dstport) Tj
+0 -12 Td
+(* frame.len, frame.time) Tj
+0 -12 Td
+(* tcp.flags, protocol) Tj
+0 -12 Td
+(* label) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(3.2 CLASS IMBALANCE) Tj
+ET
+endstream
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 2 0 R /Resources << /Font << /F1 1 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 1986 >>
+stream
+BT
+/F1 10 Tf
+72 710 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(* SMOTE is applied inside the inner loop of nested stratified CV.) Tj
+0 -12 Td
+(* This prevents leakage across outer folds while balancing the training split.) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(3.3 FEATURE SELECTION) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(* Recursive Feature Elimination \(RFE\) with a Decision Tree estimator.) Tj
+0 -12 Td
+(* RFE runs after preprocessing and SMOTE and before model fitting.) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(3.4 MODELS) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Five shallow ML models \(as in the paper\):) Tj
+0 -12 Td
+(* Logistic Regression) Tj
+0 -12 Td
+(* Bernoulli Naive Bayes) Tj
+0 -12 Td
+(* Random Forest) Tj
+0 -12 Td
+(* AdaBoost) Tj
+0 -12 Td
+(* Linear SVM) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Optional extra models \(for exploration\):) Tj
+0 -12 Td
+(* ExtraTrees) Tj
+0 -12 Td
+(* GradientBoosting) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(3.5 HYPERPARAMETER TUNING) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Grid search is performed inside the inner CV using ROC AUC.) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(* Logistic Regression: C, penalty, solver) Tj
+0 -12 Td
+(* BernoulliNB: alpha, binarize) Tj
+0 -12 Td
+(* Random Forest: n_estimators, max_features, max_depth) Tj
+0 -12 Td
+(* AdaBoost: n_estimators, learning_rate) Tj
+0 -12 Td
+(* Linear SVM: C, loss) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(3.6 EVALUATION) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(* Inner CV scoring: ROC AUC) Tj
+0 -12 Td
+(* Outer CV reporting: Accuracy, Precision, Recall, F1) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(4\) DATA SOURCES AND MAPPING) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(The original DAD dataset is not available on Hugging Face. We use proxy datasets:) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(* fenar/iot-security) Tj
+0 -12 Td
+(* schooly/Cyber-Security-Breaches) Tj
+0 -12 Td
+(* stu8king/securityincidents) Tj
+0 -12 Td
+(* kutay1907/scadaphotodataset) Tj
+0 -12 Td
+(* kutay1907/ScadaData100k) Tj
+0 -12 Td
+(* vossmoos/vestasv52-scada-windturbine-granada) Tj
+0 -12 Td
+() Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 1 0 R >> >> >>
+endobj
+6 0 obj
+<< /Length 2285 >>
+stream
+BT
+/F1 10 Tf
+72 710 Td
+(When a dataset does not contain a required field, the mapping layer simulates it with safe defaults.) Tj
+0 -12 Td
+(Labels are derived from domain heuristics \(incident types, scenarios, text keywords\) to enable end-) Tj
+0 -12 Td
+(to-end reproduction.) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(5\) ML PACKAGE DETAILS) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(5.1 FEATURE MAPPING) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(* infer_feature_mapping\(\) identifies likely source columns for canonical fields.) Tj
+0 -12 Td
+(* apply_feature_mapping\(\) renames columns and synthesizes missing features.) Tj
+0 -12 Td
+(* label is coerced to binary; if missing, it is derived from domain cues.) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(5.2 PREPROCESSING) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(FeaturePreprocessor does:) Tj
+0 -12 Td
+(* Build canonical features) Tj
+0 -12 Td
+(* Add flow features) Tj
+0 -12 Td
+(* Encode time cyclically) Tj
+0 -12 Td
+(* Bin lengths and ports) Tj
+0 -12 Td
+(* One-hot encode categorical columns) Tj
+0 -12 Td
+(* Add text length/token features for high-cardinality columns) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(5.3 NESTED CV PIPELINE) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(The pipeline in each outer fold is:) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(1\) Preprocess) Tj
+0 -12 Td
+(2\) Impute) Tj
+0 -12 Td
+(3\) SMOTE) Tj
+0 -12 Td
+(4\) RFE \(DecisionTree\)) Tj
+0 -12 Td
+(5\) Model) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Grid search optimizes ROC AUC using inner CV. Outer fold metrics are aggregated with mean/std.) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(6\) BACKEND ARCHITECTURE \(FASTAPI\)) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Key services:) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(* dataset_loader.py: load HF datasets, upload local files) Tj
+0 -12 Td
+(* preprocessor.py: load preprocessing config, build FeaturePreprocessor) Tj
+0 -12 Td
+(* trainer.py: orchestrate nested CV and aggregate results) Tj
+0 -12 Td
+(* analysis.py: CVE similarity and blue-team briefing generation) Tj
+0 -12 Td
+(* llm_chat.py: Gemini assistant with dataset and leaderboard context) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Key endpoints:) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(* /datasets/hf, /datasets/upload, /datasets/summary) Tj
+0 -12 Td
+(* /train, /train/{job_id}, /train/history) Tj
+0 -12 Td
+(* /analysis/cve-similarity, /analysis/briefing) Tj
+ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 6 0 R /Resources << /Font << /F1 1 0 R >> >> >>
+endobj
+8 0 obj
+<< /Length 2547 >>
+stream
+BT
+/F1 10 Tf
+72 710 Td
+(* /assistant/chat) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(7\) FRONTEND ARCHITECTURE \(REACT + MUI\)) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Pages:) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(* Dashboard: overview of dataset and training status) Tj
+0 -12 Td
+(* Dataset: upload and column mapping) Tj
+0 -12 Td
+(* Training: select models and hyperparameters) Tj
+0 -12 Td
+(* Results: leaderboard, confusion matrix, feature importance) Tj
+0 -12 Td
+(* Threat Intel: CVE similarity and blue-team playbooks) Tj
+0 -12 Td
+(* Assistant: Gemini-driven security analysis chat) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(8\) THREAT INTEL AND CVE SIMILARITY) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(* TF-IDF similarity against the ahadda5/cve150k dataset.) Tj
+0 -12 Td
+(* Returns top-k CVE descriptions and keyphrases related to the dataset.) Tj
+0 -12 Td
+(* Intended for triage and hypothesis generation only.) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(9\) GEMINI ASSISTANT \(OPTIONAL\)) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(* Uses google-genai SDK with a security-focused system prompt.) Tj
+0 -12 Td
+(* Context includes dataset summary, leaderboard, and optional CVE matches.) Tj
+0 -12 Td
+(* API key is provided via GEMINI_API_KEY environment variable.) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(10\) NOTEBOOK REPRODUCTION) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(notebooks/experiment_reproduction.ipynb executes:) Tj
+0 -12 Td
+(* dataset load) Tj
+0 -12 Td
+(* preprocessing and feature mapping) Tj
+0 -12 Td
+(* RFE sweep) Tj
+0 -12 Td
+(* nested CV evaluation) Tj
+0 -12 Td
+(* plots and leaderboard output) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(Generated figures are in notebooks/outputs/.) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(11\) PERFORMANCE SNAPSHOT \(SAMPLE_SIZE=2000\)) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(The following table reflects the nested CV results stored in) Tj
+0 -12 Td
+(notebooks/outputs/leaderboard_multi.csv.) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(| Dataset | Model | Accuracy | Precision | Recall | F1 |) Tj
+0 -12 Td
+(|---|---|---:|---:|---:|---:|) Tj
+0 -12 Td
+(| fenar/iot-security | random_forest | 1.0000 | 1.0000 | 1.0000 | 1.0000 |) Tj
+0 -12 Td
+(| fenar/iot-security | adaboost | 1.0000 | 1.0000 | 1.0000 | 1.0000 |) Tj
+0 -12 Td
+(| fenar/iot-security | logistic_regression | 0.1005 | 0.1005 | 1.0000 | 0.1826 |) Tj
+0 -12 Td
+(| fenar/iot-security | linear_svm | 0.1005 | 0.1005 | 1.0000 | 0.1826 |) Tj
+0 -12 Td
+(| fenar/iot-security | naive_bayes | 0.8995 | 0.0000 | 0.0000 | 0.0000 |) Tj
+0 -12 Td
+(| schooly/Cyber-Security-Breaches | random_forest | 0.7147 | 0.5368 | 0.6979 | 0.5940 |) Tj
+ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 8 0 R /Resources << /Font << /F1 1 0 R >> >> >>
+endobj
+10 0 obj
+<< /Length 1649 >>
+stream
+BT
+/F1 10 Tf
+72 710 Td
+(| schooly/Cyber-Security-Breaches | linear_svm | 0.5100 | 0.4100 | 0.7788 | 0.4144 |) Tj
+0 -12 Td
+(| schooly/Cyber-Security-Breaches | naive_bayes | 0.5507 | 0.4156 | 0.6814 | 0.4126 |) Tj
+0 -12 Td
+(| schooly/Cyber-Security-Breaches | logistic_regression | 0.5062 | 0.3727 | 0.7542 | 0.4070 |) Tj
+0 -12 Td
+(| schooly/Cyber-Security-Breaches | adaboost | 0.6474 | 0.3760 | 0.4947 | 0.4032 |) Tj
+0 -12 Td
+(| vossmoos/vestasv52-scada-windturbine-granada | random_forest | 1.0000 | 1.0000 | 1.0000 | 1.0000 |) Tj
+0 -12 Td
+(| vossmoos/vestasv52-scada-windturbine-granada | adaboost | 1.0000 | 1.0000 | 1.0000 | 1.0000 |) Tj
+0 -12 Td
+(| vossmoos/vestasv52-scada-windturbine-granada | logistic_regression | 0.9980 | 1.0000 | 0.9973 |) Tj
+0 -12 Td
+(0.9986 |) Tj
+0 -12 Td
+(| vossmoos/vestasv52-scada-windturbine-granada | linear_svm | 0.9945 | 1.0000 | 0.9926 | 0.9963 |) Tj
+0 -12 Td
+(| vossmoos/vestasv52-scada-windturbine-granada | naive_bayes | 0.6980 | 0.8917 | 0.6752 | 0.7683 |) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(12\) REPRODUCIBILITY AND CONFIGURATION) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(* config/params.yaml controls preprocessing bins and thresholds.) Tj
+0 -12 Td
+(* Random seeds are fixed in model training and CV splits.) Tj
+0 -12 Td
+(* Notebook is executable top-to-bottom.) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(13\) LIMITATIONS) Tj
+0 -12 Td
+() Tj
+0 -12 Td
+() Tj
+0 -12 Td
+(* Proxy datasets are not identical to DAD; labels and fields are mapped or derived.) Tj
+0 -12 Td
+(* Some datasets are small and may lead to optimistic scores.) Tj
+0 -12 Td
+(* CVE similarity is heuristic and not a vulnerability scanner.) Tj
+0 -12 Td
+() Tj
+ET
+endstream
+endobj
+11 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 10 0 R /Resources << /Font << /F1 1 0 R >> >> >>
+endobj
+12 0 obj
+<< /Type /Pages /Kids [3 0 R 5 0 R 7 0 R 9 0 R 11 0 R] /Count 5 >>
+endobj
+13 0 obj
+<< /Type /Catalog /Pages 12 0 R >>
+endobj
+xref
+0 14
+0000000000 65535 f 
+0000000009 00000 n 
+0000000079 00000 n 
+0000002863 00000 n 
+0000002989 00000 n 
+0000005027 00000 n 
+0000005153 00000 n 
+0000007490 00000 n 
+0000007616 00000 n 
+0000010215 00000 n 
+0000010341 00000 n 
+0000012043 00000 n 
+0000012171 00000 n 
+0000012254 00000 n 
+trailer
+<< /Size 14 /Root 13 0 R >>
+startxref
+12305
+%%EOF

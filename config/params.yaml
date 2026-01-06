@@ -1,0 +1,51 @@
+core_features:
+  time: frame.time
+  label: label
+  protocol: protocol
+  src_ip: ip.src
+  dst_ip: ip.dst
+  tcp_src_port: tcp.srcport
+  tcp_dst_port: tcp.dstport
+  udp_src_port: udp.srcport
+  udp_dst_port: udp.dstport
+  frame_len: frame.len
+  tcp_flags: tcp.flags
+  flow_duration: flow.duration
+  flow_packets: flow.packets
+  flow_bytes: flow.bytes
+
+preprocessing:
+  frame_len_bins: [0, 64, 128, 256, 512, 1024, 1500, 9000]
+  port_bins: [0, 1024, 49152, 65536]
+  max_unique_for_categorical: 50
+  keep_numeric_frame_len: false
+  keep_numeric_ports: true
+  text_length_threshold: 30
+  rfe_features: 10
+
+models:
+  logistic_regression:
+    C: [0.1, 1.0, 10.0]
+    penalty: ["l2"]
+    solver: ["liblinear"]
+  naive_bayes:
+    alpha: [0.1, 0.5, 1.0, 2.0]
+    binarize: [0.0]
+  random_forest:
+    n_estimators: [100, 200, 300]
+    max_features: ["sqrt", "log2"]
+    max_depth: [null, 10, 20]
+  adaboost:
+    n_estimators: [50, 100, 200]
+    learning_rate: [0.5, 1.0, 1.5]
+  linear_svm:
+    C: [0.1, 1.0, 10.0]
+    loss: ["hinge", "squared_hinge"]
+  extra_trees:
+    n_estimators: [200, 300, 500]
+    max_features: ["sqrt", "log2"]
+    max_depth: [null, 10, 20]
+  gradient_boosting:
+    n_estimators: [100, 200, 300]
+    learning_rate: [0.05, 0.1, 0.2]
+    max_depth: [2, 3, 4]
