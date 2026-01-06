@@ -114,31 +114,31 @@ The UI includes:
 
 ## UI Screenshots
 
-![Dashboard Overview](screenshots/ui-dashboard-overview.png)
+![Dashboard Overview](Screenshots/ui-dashboard-overview.png)
 Main control room summary showing dataset identity, columns, anomaly rate, and overall pipeline readiness.
 
-![Dataset Mapping](screenshots/ui-dataset-mapping.png)
+![Dataset Mapping](Screenshots/ui-dataset-mapping.png)
 Load a dataset from Hugging Face or upload a file, then map columns to the 14 core packet-level attributes.
 
-![Training Configuration](screenshots/ui-training-config.png)
+![Training Configuration](Screenshots/ui-training-config.png)
 Model selection and hyperparameter grid editor with RFE feature count and launch controls.
 
-![Threat Intel Summary](screenshots/ui-threat-intel-summary.png)
+![Threat Intel Summary](Screenshots/ui-threat-intel-summary.png)
 Risk score, severity, and CVE similarity matches for the active dataset.
 
-![Threat Intel Playbook](screenshots/ui-threat-intel-playbook.png)
+![Threat Intel Playbook](Screenshots/ui-threat-intel-playbook.png)
 Response playbook, defensive controls, blue-team tooling, and attack/defense scenarios.
 
-![Gemini Assistant](screenshots/ui-assistant.png)
+![Gemini Assistant](Screenshots/ui-assistant.png)
 Assistant chat grounded in dataset context, training status, and suggested prompts.
 
-![Tutorial Page](screenshots/ui-tutorial.png)
+![Tutorial Page](Screenshots/ui-tutorial.png)
 Step-by-step setup and pipeline walkthrough with quickstart commands.
 
-![Related Papers](screenshots/ui-related-papers.png)
+![Related Papers](Screenshots/ui-related-papers.png)
 Research summaries with how-it-works bullets and tutorial-style code sketches.
 
-![Dashboard Health](screenshots/ui-dashboard-health.png)
+![Dashboard Health](Screenshots/ui-dashboard-health.png)
 Dataset health panel showing label distribution, mapping coverage, and missingness hotspots with training status.
 
 ## Threat Intel & CVE Similarity
